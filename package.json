@@ -3,13 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "description": "Cuéntamelo Sijtli - Hackathon Innovaccion Virtual",
-  "homepage": "<AZURE URL HERE>",
+  "homepage": "www.sijtli.me",
+  "repository": "github:daviddesmet/sijtli",
   "author": "David De Smet <viajero08438@innovaccion.mx>",
   "contributors": [
     "María Beatriz Sánchez Díaz <viajero02831@innovaccion.mx>",
     "José Francisco Cruz Camacho <viajero03301@innovaccion.mx>",
     "Rubén Rojas Román <viajero26466@innovaccion.mx>",
     "María del Rosario Vargas Tecuatl <viajero25605@innovaccion.mx>"
+  ],
+  "keywords": [
+    "innovaccion virtual",
+    "azure",
+    "machine learning",
+    "ai"
   ],
   "scripts": {
     "dev": "vue-cli-service serve",
