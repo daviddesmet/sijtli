@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="text-white">
     <div class="my-4">
-      <p>{{ sampleEnglish }}</p>
+      <p class="text-2xl mb-2">{{ sampleEnglish }}</p>
       <button
         class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2"
         @click.prevent="play(this.sampleEnglish, 'en-US', 'JessaRUS')"
@@ -15,8 +15,8 @@
         Reproducir Neural en-US
       </button>
     </div>
-    <div class="my-4">
-      <p>{{ sampleSpanish }}</p>
+    <div class="my-4 mt-10">
+      <p class="text-2xl mb-2">{{ sampleSpanish }}</p>
       <button
         class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2"
         @click.prevent="play(this.sampleSpanish, 'es-MX', 'HildaRUS')"
@@ -124,3 +124,11 @@ export default class Stories extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import url("https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap");
+
+p {
+  font-family: "Henny Penny", cursive;
+}
+</style>
