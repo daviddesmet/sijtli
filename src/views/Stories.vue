@@ -3,19 +3,31 @@
     <div class="my-4">
       <p>{{ sampleEnglish }}</p>
       <button
-        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700"
+        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2"
         @click.prevent="play(this.sampleEnglish, 'en-US', 'JessaRUS')"
       >
         Reproducir en-US
+      </button>
+      <button
+        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700"
+        @click.prevent="play(this.sampleEnglish, 'en-US', 'AriaNeural')"
+      >
+        Reproducir Neural en-US
       </button>
     </div>
     <div class="my-4">
       <p>{{ sampleSpanish }}</p>
       <button
-        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700"
+        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2"
         @click.prevent="play(this.sampleSpanish, 'es-MX', 'HildaRUS')"
       >
         Reproducir es-MX
+      </button>
+      <button
+        class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700"
+        @click.prevent="play(this.sampleSpanish, 'es-MX', 'DaliaNeural')"
+      >
+        Reproducir Neural es-MX
       </button>
     </div>
   </div>
@@ -42,9 +54,34 @@ export default class Stories extends Vue {
             </speak>`;
   }
 
+  textToNeuralPitch(text: string, lang: string, voice: string): string {
+    return `<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="${lang}">
+              <voice name="${lang}-${voice}">
+                <mstts:express-as style="cheerful">
+                  ${text}
+                </mstts:express-as>
+            </speak>`;
+  }
+
   play(text: string, lang = "en-US", voice = "JessaRUS"): void {
     this.synthesizer.speakSsmlAsync(
       this.textToPitch(text, lang, voice),
+      (result) => {
+        if (result) {
+          // console.log(JSON.stringify(result));
+        }
+        // this.synthesizer.close();
+      },
+      (error) => {
+        console.error(error);
+        // this.synthesizer.close();
+      }
+    );
+  }
+
+  playNeural(text: string, lang = "en-US", voice = "AriaNeural"): void {
+    this.synthesizer.speakSsmlAsync(
+      this.textToNeuralPitch(text, lang, voice),
       (result) => {
         if (result) {
           // console.log(JSON.stringify(result));
