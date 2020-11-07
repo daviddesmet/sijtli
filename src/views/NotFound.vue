@@ -13,9 +13,3 @@
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.gradient {
-  background-image: linear-gradient(135deg, #684ca0 35%, #1c4ca0 100%);
-}
-</style>
