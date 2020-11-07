@@ -4,6 +4,12 @@
 
 **TODO:** Add a description
 
+## Azure Technologies
+
+- Azure Static Web Apps
+- Azure Cognitive Services
+- ...
+
 ## Project setup
 
 ```
