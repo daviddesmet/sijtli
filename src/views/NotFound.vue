@@ -1,8 +1,22 @@
 <template>
-  <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-    <div class="flex items-center pt-8 sm:justify-start sm:pt-0">
-      <div class="px-4 text-lg text-blue-500 border-r border-blue-400 tracking-wider"> 404 </div>
-      <div class="ml-4 text-lg text-blue-500 uppercase tracking-wider"> Not Found </div>
+  <div class="gradient text-white min-h-screen w-screen flex items-center">
+    <div class="container mx-auto p-4 flex flex-wrap items-center">
+      <div class="w-full md:w-5/12 text-center p-4">
+        <img src="../assets/img/notfound-lady.png" alt="Not Found" />
+      </div>
+      <div class="w-full md:w-7/12 text-center md:text-left p-4">
+        <div class="text-6xl font-medium">404</div>
+        <div class="text-xl md:text-3xl font-medium mb-4"> Oops. Se perdió la calaverita. </div>
+        <div class="text-lg mb-8"> Puede ser que hayas escrito mal la dirección o la página se la llevó la muerte. </div>
+        <!-- <a href="#" class="border border-white rounded p-4">Go Home</a> -->
+        <router-link class="border border-white rounded p-4" to="/">Regresar a inicio</router-link>
+      </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.gradient {
+  background-image: linear-gradient(135deg, #684ca0 35%, #1c4ca0 100%);
+}
+</style>
