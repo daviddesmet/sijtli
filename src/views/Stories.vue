@@ -1,6 +1,7 @@
 <template>
   <div class="text-white">
-    <div class="my-4">
+    <h1 class="text-5xl">Cuentos de Terror</h1>
+    <div class="my-4 mt-10">
       <p class="text-2xl mb-2">{{ sampleEnglish }}</p>
       <button
         class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2"
@@ -126,7 +127,12 @@ export default class Stories extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap");
+
+h1 {
+  font-family: "Creepster", cursive;
+}
 
 p {
   font-family: "Henny Penny", cursive;
