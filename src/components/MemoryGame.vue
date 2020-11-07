@@ -90,7 +90,7 @@ export default class MemoryGame extends Vue {
     this.started = true;
     this.startTime = new Date().getTime();
 
-    this.timer = setInterval(() => {
+    this.timer = window.setInterval(() => {
       const distance = new Date().getTime() - this.startTime;
 
       // Time calculations for days, hours, minutes and seconds

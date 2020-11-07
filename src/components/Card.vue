@@ -66,7 +66,7 @@ export default class Card extends Vue {
   }
 
   handleMouseLeave(): void {
-    this.mouseLeaveDelay = setTimeout(() => {
+    this.mouseLeaveDelay = window.setTimeout(() => {
       this.mouseX = 0;
       this.mouseY = 0;
     }, 1000);
