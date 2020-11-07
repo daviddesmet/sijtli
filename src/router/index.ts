@@ -9,11 +9,11 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/game/memory",
-    name: "MemoryGame",
+    name: "Memory",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "game-memory" */ "../views/MemoryGame.vue")
+    component: () => import(/* webpackChunkName: "game-memory" */ "../views/Memory.vue")
   },
   {
     path: "/game/puzzle",

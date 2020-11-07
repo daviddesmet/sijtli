@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex items-top justify-center min-h-screen bg-gray-200 dark:bg-gray-900 sm:items-center sm:pt-0 font-sans">
+  <div class="gradient relative flex items-top justify-center min-h-screen bg-gray-200 dark:bg-gray-900 sm:items-center sm:pt-0 font-sans">
     <router-view />
   </div>
 </template>
