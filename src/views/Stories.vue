@@ -15,7 +15,7 @@
         class="border border-white text-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700"
         @click.prevent="play(this.sampleSpanish, 'es-MX', 'HildaRUS')"
       >
-        Reproducir en-US
+        Reproducir es-MX
       </button>
     </div>
   </div>
