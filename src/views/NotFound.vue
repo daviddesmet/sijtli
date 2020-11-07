@@ -7,7 +7,7 @@
       <div class="w-full md:w-7/12 text-center md:text-left p-4">
         <div class="text-6xl font-medium">404</div>
         <div class="text-xl md:text-3xl font-medium mb-4"> Oops. Se perdió la calaca. </div>
-        <div class="text-lg mb-8"> Puede ser que hayas escrito mal la dirección o la página se la llevó la muerte. </div>
+        <div class="text-lg mb-8"> Puede ser que hayas escrito mal la dirección o la página se la llevó el coco. </div>
         <router-link class="border border-white rounded p-4" to="/">Regresar a inicio</router-link>
       </div>
     </div>
