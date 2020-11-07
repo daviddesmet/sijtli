@@ -16,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "game-memory" */ "../views/MemoryGame.vue")
   },
   {
+    path: "/game/puzzle",
+    name: "JigsawPuzzleGame",
+    component: () => import(/* webpackChunkName: "game-puzzle" */ "../views/JigsawPuzzleGame.vue")
+  },
+  {
     // pathMatch is the name of the param, e.g., going to /not/found yields
     // { params: { pathMatch: ['not', 'found'] }}
     // this is thanks to the last *, meaning repeated params and it is necessary if you

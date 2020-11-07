@@ -8,7 +8,6 @@
         <div class="text-6xl font-medium">404</div>
         <div class="text-xl md:text-3xl font-medium mb-4"> Oops. Se perdió la calaverita. </div>
         <div class="text-lg mb-8"> Puede ser que hayas escrito mal la dirección o la página se la llevó la muerte. </div>
-        <!-- <a href="#" class="border border-white rounded p-4">Go Home</a> -->
         <router-link class="border border-white rounded p-4" to="/">Regresar a inicio</router-link>
       </div>
     </div>
