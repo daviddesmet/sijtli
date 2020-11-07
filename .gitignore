@@ -1,0 +1,35 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+/.yarn/*
+!/.yarn/plugins
+!/.yarn/releases
+!/.yarn/sdks
+node_modules
+
+# Dev/Build Artifacts
+/dist
+
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+
+# Local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
