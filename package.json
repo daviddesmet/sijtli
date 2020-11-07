@@ -39,6 +39,8 @@
     "test:ci": "run-s test:unit:ci test:e2e"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.10",
+    "@amcharts/amcharts4-geodata": "^4.1.18",
     "core-js": "^3.7.0",
     "lodash-es": "^4.17.15",
     "tailwindcss": "^1.9.6",
