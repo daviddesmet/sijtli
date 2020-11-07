@@ -8,7 +8,7 @@
         <div class="text-6xl font-medium">404</div>
         <div class="text-xl md:text-3xl font-medium mb-4"> Oops. Se perdió la calaca. </div>
         <div class="text-lg mb-8"> Puede ser que hayas escrito mal la dirección o la página se la llevó el coco. </div>
-        <router-link class="border border-white rounded p-4" to="/">Regresar a inicio</router-link>
+        <router-link class="border border-white rounded p-4 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" to="/">Regresar a inicio</router-link>
       </div>
     </div>
   </div>

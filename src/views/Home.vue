@@ -1,9 +1,5 @@
 <template>
   <div class="home">
-    <div id="max-w-xl mx-auto sm:px-6 lg:px-8">
-      <router-link to="/">Inicio</router-link> | <router-link to="/game/memory">Memoria</router-link> | <router-link to="/game/puzzle">Rompecabezas</router-link> |
-      <router-link to="/stories">Cuentos</router-link>
-    </div>
     <img alt="logo" class="w-64 h-64" src="../assets/img/logo.png" />
   </div>
   <div ref="map" class="w-9/12" style="height: 657px"></div>
@@ -40,11 +36,11 @@ export default class Home extends Vue {
     // Configure series
     let polygonTemplate = polygonSeries.mapPolygons.template;
     polygonTemplate.tooltipText = "{name}";
-    polygonTemplate.fill = am4core.color("#74B266");
+    polygonTemplate.fill = am4core.color("#E1AE05"); // 74B266
 
     // Create hover state and set alternative fill color
     let hs = polygonTemplate.states.create("hover");
-    hs.properties.fill = am4core.color("#367B25");
+    hs.properties.fill = am4core.color("#F28800"); // 367B25
   }
 
   beforeDestroy(): void {

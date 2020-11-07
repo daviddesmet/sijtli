@@ -299,52 +299,52 @@ export default class MemoryGame extends Vue {
   position: absolute;
   right: 0;
   top: 0;
-}
 
-.splash .overlay {
-  background-color: rgba(0, 0, 0, 0.6);
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 
-.splash .content {
-  background-color: rgba(51, 51, 51, 0.9);
-  border-radius: 10px;
-  border-radius: 10px;
-  border-radius: 10px;
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
-  left: 0;
-  margin: auto;
-  max-width: 500px;
-  padding: 1em;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 30px;
-}
+  .content {
+    background-color: rgba(51, 51, 51, 0.9);
+    border-radius: 10px;
+    border-radius: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
+    left: 0;
+    margin: auto;
+    max-width: 500px;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 30px;
 
-.splash .content .title {
-  font-size: 1.8em;
-  padding: 0.5em;
-}
+    .title {
+      font-size: 1.8em;
+      padding: 0.5em;
+    }
 
-.splash .content button {
-  background-color: #444;
-  border: 1px solid #555;
-  border-radius: 4px;
-  border-radius: 4px;
-  border-radius: 4px;
-  color: #fff;
-  cursor: pointer;
-  font-family: "Press Start 2P", "Helvetica", "Arial", sans-serif;
-  font-size: 1.4em;
-  margin-top: 1em;
-  margin-top: 1em;
-  padding: 20px;
+    button {
+      background-color: #444;
+      border: 1px solid #555;
+      border-radius: 4px;
+      border-radius: 4px;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-family: "Press Start 2P", "Helvetica", "Arial", sans-serif;
+      font-size: 1.4em;
+      margin-top: 1em;
+      margin-top: 1em;
+      padding: 20px;
+    }
+  }
 }
 </style>
