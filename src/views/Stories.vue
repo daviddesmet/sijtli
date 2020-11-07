@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
+import { SPEECH_SDK_KEY, SPEECH_SDK_REGION } from "@/constants/config";
 
 @Options({})
 export default class Stories extends Vue {
@@ -58,7 +59,7 @@ export default class Stories extends Vue {
   }
 
   mounted(): void {
-    this.speechConfig = sdk.SpeechConfig.fromSubscription("8d0019b864944288bf92e53578ffc1ae", "eastus");
+    this.speechConfig = sdk.SpeechConfig.fromSubscription(SPEECH_SDK_KEY, SPEECH_SDK_REGION);
     // this.speechConfig.speechRecognitionLanguage = "es-MX";
 
     // const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
