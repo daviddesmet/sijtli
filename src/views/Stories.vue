@@ -29,6 +29,7 @@ export default class Stories extends Vue {
     // const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
     //synthesizer.speakTextAsync(
 
+    // https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support#standard-voices
     // "en-US", "JessaRUS"
     // "es-MX", "HildaRUS"
 
