@@ -6,6 +6,10 @@
         <img v-show="!talking" alt="logo" class="mx-auto" src="/img/alebrije-static.png" style="height: 150px; width: 135px" />
         <div v-show="talking" ref="alebrijeTalking" class="mx-auto" style="background: url('/img/alebrije-talk-sprite.png') 0 0; height: 150px; width: 135px" />
         <div class="text-center text-yellow-500">
+          <!-- <button class="absolute top-0 right-0 p-4">EN</button>
+          <button class="absolute top-0 right-0 p-4">ES</button> -->
+          <button class="mt-4 mr-4" :class="{ 'text-indigo-800': lang === 'ES' }" @click.prevent="switchLanguage('EN')">EN</button>
+          <button class="mt-4" :class="{ 'text-indigo-800': lang === 'EN' }" @click.prevent="switchLanguage('ES')">ES</button>
           <button
             v-if="!noMore"
             class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded mt-4"
@@ -34,18 +38,16 @@
         </div>
         <div class="mt-4 text-center text-yellow-500">
           <!-- <h2 class="text-lg">{{ speechTitle }}</h2> -->
-          <div v-show="step === -1" class="text-gray-800 text-lg mt-16">
-            Hoy vas a estar acompañado de Sijtli, ella te acompañará a dar un recorrido por algunos de los estados de la república, podrás encontrar juegos y leyendas. ¡Comienza tu recorrido!
-          </div>
-          <div v-show="step === 0" class="text-gray-800 text-lg mt-16">Alebrijes... ¡coloridos y fantásticos! ¿Sabías que soy un alebrije?</div>
-          <div v-show="step === 1" class="text-gray-800 text-lg mt-16">Día de muertos, una de las tradiciones más representativas de nuestra cultura mexicana.</div>
-          <div v-show="step === 2" class="text-gray-800 text-lg mt-16">¡Oaxaca! El inicio de este maravilloso recorrido en nuestro bello país.</div>
-          <div v-show="step === 3" class="text-gray-800 text-lg mt-16">Hagamos algo divertido, pon a prueba tu memoria jugando el memorama. ¡Comencemos!</div>
-          <div v-show="step === 4" class="text-gray-800 text-lg mt-16">Michoacán y sus pueblos mágicos como Pátzcuaro, Janitzio, Tzintzuntzan.</div>
-          <div v-show="step === 5" class="text-gray-800 text-lg mt-16">¡Vaya! Hemos aprendido mucho en este recorrido. Alebrijes, catrinas, ofrendas...</div>
-          <div v-show="step === 6" class="text-gray-800 text-lg mt-16">¡Guanajuato! Es uno de los estados del país donde se celebra a lo grande.</div>
-          <div v-show="step === 7" class="text-gray-800 text-lg mt-16">Y para concluir con esta aventura, les platicare de la flor de cempasúchil.</div>
-          <div v-show="step === 8" class="text-gray-800 text-lg mt-16">¡Gracias y hasta pronto!</div>
+          <div v-show="step === -1" class="text-gray-800 text-lg mt-16">{{ textLanguage(1) }}</div>
+          <div v-show="step === 0" class="text-gray-800 text-lg mt-16">{{ textLanguage(2) }}</div>
+          <div v-show="step === 1" class="text-gray-800 text-lg mt-16">{{ textLanguage(3) }}</div>
+          <div v-show="step === 2" class="text-gray-800 text-lg mt-16">{{ textLanguage(4) }}</div>
+          <div v-show="step === 3" class="text-gray-800 text-lg mt-16">{{ textLanguage(5) }}</div>
+          <div v-show="step === 4" class="text-gray-800 text-lg mt-16">{{ textLanguage(6) }}</div>
+          <div v-show="step === 5" class="text-gray-800 text-lg mt-16">{{ textLanguage(7) }}</div>
+          <div v-show="step === 6" class="text-gray-800 text-lg mt-16">{{ textLanguage(8) }}</div>
+          <div v-show="step === 7" class="text-gray-800 text-lg mt-16">{{ textLanguage(9) }}</div>
+          <div v-show="step === 8" class="text-gray-800 text-lg mt-16">{{ textLanguage(10) }}</div>
         </div>
       </div>
     </div>
@@ -78,7 +80,7 @@ import HangmanGame from "@/components/HangmanGame.vue";
 
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 import { SPEECH_SDK_KEY, SPEECH_SDK_REGION } from "@/constants/config";
-import { SPEECH_ES } from "@/data/speech.data";
+import { SPEECH_ES, SPEECH_EN } from "@/data/speech.data";
 
 import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
@@ -104,18 +106,73 @@ export default class Home extends Vue {
   synthesizer!: sdk.SpeechSynthesizer;
   player!: sdk.SpeakerAudioDestination;
 
+  lang = "ES";
+
   step = -1; // -1
   speechSpanish = SPEECH_ES;
+  speechEnglish = SPEECH_EN;
   speechTitle = "";
   speechContent = "";
   noMore = false;
 
-  beginTalkText = "Comenzar";
+  beginTalkText = "";
   beginTalkEnabled = false;
   talking = false;
   talkAnimation: number | undefined = undefined;
 
   hangmanWords = ["Alebrije", "Catrina", "Ofrenda", "Calavera", "Coco", "Dulces"];
+
+  // This is freeaking ugly but got no time! Well, the whole code needs a massive refactor...
+  textUISpanish = [
+    "Comenzar",
+    "Hoy vas a estar acompañado de Sijtli, ella te acompañará a dar un recorrido por algunos de los estados de la república, podrás encontrar juegos y leyendas. ¡Comienza tu recorrido!",
+    "Alebrijes... ¡coloridos y fantásticos! ¿Sabías que soy un alebrije?",
+    "Día de muertos, una de las tradiciones más representativas de nuestra cultura mexicana.",
+    "¡Oaxaca! El inicio de este maravilloso recorrido en nuestro bello país.",
+    "Hagamos algo divertido, pon a prueba tu memoria jugando el memorama. ¡Comencemos!",
+    "Michoacán y sus pueblos mágicos como Pátzcuaro, Janitzio, Tzintzuntzan.",
+    "¡Vaya! Hemos aprendido mucho en este recorrido. Alebrijes, catrinas, ofrendas...",
+    "¡Guanajuato! Es uno de los estados del país donde se celebra a lo grande.",
+    "Y para concluir con esta aventura, les platicare de la flor de cempasúchil.",
+    "¡Gracias y hasta pronto!",
+    "Continuar...",
+    "Sigamos el recorrido",
+    "Cempasúchil"
+  ];
+
+  textUIEnglish = [
+    "Let's Begin",
+    "Today you will be with Sijtli, she will give you a tour around some of the states of Mexico, you should find games and leyends. Let's begin your journey!",
+    "Alebrijes... Colorful and fantastic! Did you know I am an alebrije?",
+    "Day of the death, one of the most representative traditions of our mexican culture.",
+    "Oaxaca! THe beginning of this wonderful journey in our beautiful country.",
+    "Let's have some fun, test your memory playing a memory game. Let's begin!",
+    "Michoacán and its magic towns like Pátzcuaro, Janitzio, Tzintzuntzan.",
+    "Wow! We have learned a lot on this journey. Alebrijes, catrinas, offerings...",
+    "Guanajuato! One of the states of the country where they celebrate in a big way.",
+    "And to conclude the aventure, I'm going to talk about the cempasuchil flower.",
+    "Thank you and see you soon!",
+    "Continue...",
+    "Let's continue the tour",
+    "Cempasuchil"
+  ];
+
+  switchLanguage(lang: string): void {
+    this.lang = lang;
+
+    if (this.step == -1) {
+      this.beginTalkText = this.textLanguage(0);
+    }
+  }
+
+  textLanguage(idx: number): string {
+    switch (this.lang) {
+      case "EN":
+        return this.textUIEnglish[idx];
+      default:
+        return this.textUISpanish[idx];
+    }
+  }
 
   textToPitch(text: string, lang: string, voice: string): string {
     return `<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="${lang}">
@@ -151,7 +208,12 @@ export default class Home extends Vue {
     // console.log("Memory game finished!!!", elapsed, turns);
     // TODO: Use Vuex in case we want to reset the game and play again later.
     this.initSpeechEngine(false);
-    this.play(`Felicidades, resolviste el memorama en tan solo ${turns} turnos!`, "es-MX", "DaliaNeural");
+    if (this.lang == "ES") {
+      this.play(`Felicidades, resolviste el memorama en tan solo ${turns} turnos!`, "es-MX", "DaliaNeural");
+    } else {
+      this.play(`Congratulations, you solved the puzzle in just ${turns} turns!`, "en-US", "AriaNeural");
+    }
+
     window.setTimeout(() => {
       this.endStep();
     }, 1500);
@@ -164,9 +226,17 @@ export default class Home extends Vue {
     // TODO: Use Vuex in case we want to reset the game and play again later.
     this.initSpeechEngine(false);
     if (lose) {
-      this.play("¡Vaya! No te pongas triste, ¡la proxima vez lo haras mejor!", "es-MX", "DaliaNeural");
+      if (this.lang == "ES") {
+        this.play("¡Vaya! No te pongas triste, ¡la proxima vez lo haras mejor!", "es-MX", "DaliaNeural");
+      } else {
+        this.play("Oops! Don't be sad, next time you will do better!", "en-US", "AriaNeural");
+      }
     } else {
-      this.play("¡Wow! ¡Me dejas sorprendida!", "es-MX", "DaliaNeural");
+      if (this.lang == "ES") {
+        this.play("¡Wow! ¡Me dejas sorprendida!", "es-MX", "DaliaNeural");
+      } else {
+        this.play("Wow! You leave me surprised!", "en-US", "AriaNeural");
+      }
     }
     window.setTimeout(() => {
       this.endStep();
@@ -357,7 +427,7 @@ export default class Home extends Vue {
 
     switch (this.step) {
       case 0:
-        this.beginTalkText = "Continuar...";
+        this.beginTalkText = this.textLanguage(11);
         this.step = 1;
         break;
       case 1:
@@ -365,14 +435,18 @@ export default class Home extends Vue {
         this.step = 2;
         break;
       case 2:
-        this.beginTalkText = "Sigamos el recorrido";
+        this.beginTalkText = this.textLanguage(12);
         this.showSomeLove(true);
         window.setTimeout(() => {
           this.showSomeLove(false);
           this.resetZoomLevel();
           this.step = 3;
           this.initSpeechEngine(false);
-          this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+          if (this.lang == "ES") {
+            this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+          } else {
+            this.play(this.speechEnglish[this.step], "en-US", "AriaNeural");
+          }
         }, 2500);
         break;
       case 3:
@@ -382,14 +456,18 @@ export default class Home extends Vue {
         }, 2500);
         break;
       case 4:
-        this.beginTalkText = "Sigamos el recorrido";
+        this.beginTalkText = this.textLanguage(12);
         this.showSomeLove(true);
         window.setTimeout(() => {
           this.showSomeLove(false);
           this.resetZoomLevel();
           this.step = 5;
           this.initSpeechEngine(false);
-          this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+          if (this.lang == "ES") {
+            this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+          } else {
+            this.play(this.speechSpanish[this.step], "en-US", "AriaNeural");
+          }
         }, 2500);
         break;
       case 5:
@@ -399,14 +477,18 @@ export default class Home extends Vue {
         }, 2500);
         break;
       case 6:
-        this.beginTalkText = "Cempasúchil";
+        this.beginTalkText = this.textLanguage(13);
         window.setTimeout(() => {
           this.resetZoomLevel();
           this.step = 7;
         }, 2500);
         break;
       case 7:
-        this.step = 8;
+        this.noMore = true;
+        window.setTimeout(() => {
+          this.resetZoomLevel();
+          this.step = 8;
+        }, 2500);
         break;
       default:
         break;
@@ -454,13 +536,19 @@ export default class Home extends Vue {
 
     window.setTimeout(() => {
       this.initSpeechEngine(true);
-      this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+      if (this.lang == "ES") {
+        this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+      } else {
+        this.play(this.speechEnglish[this.step], "en-US", "AriaNeural");
+      }
     }, 2500);
   }
 
   mounted(): void {
     this.initMap();
     this.alebrijeTalkAnimation();
+
+    this.beginTalkText = this.textLanguage(0);
   }
 
   beforeDestroy(): void {
