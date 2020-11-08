@@ -3,7 +3,8 @@
   <div class="container mx-auto flex flex-wrap items-start">
     <div class="w-full md:w-5/12 text-center lg:text-left px-8 md:px-12">
       <div class="p-12 rounded-lg shadow-md" style="background-color: rgb(160, 159, 208)">
-        <img alt="logo" class="mx-auto w-64 h-64" src="../assets/img/logo.png" />
+        <img v-show="!talking" alt="logo" class="mx-auto" src="/img/alebrije-static.png" style="height: 150px; width: 135px" />
+        <p v-show="talking" ref="alebrijeTalking" class="mx-auto" style="background: url('/img/alebrije-talk-sprite.png') 0 0; height: 150px; width: 135px" />
         <div class="text-center text-yellow-500">
           <h2 class="text-lg">Algo....</h2>
           <div class="text-gray-800 mt-2">Contenido...</div>
@@ -65,6 +66,7 @@ export default class Home extends Vue {
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
 
+  talking = false;
   hangmanWords = ["Cultura", "Coco", "Altar", "Calavera"];
 
   memoryGameFinished(elapsed: string, turns: number): void {
@@ -218,8 +220,25 @@ export default class Home extends Vue {
     }
   }
 
+  alebrijeTalk(): void {
+    const step = 135;
+    let position = step;
+    let interval = 150; //100 ms of interval for the setInterval()
+
+    const tID = window.setInterval(() => {
+      const alebrijeTalking = this.$refs.alebrijeTalking as HTMLDivElement;
+      alebrijeTalking.style.backgroundPosition = `-${position}px 0px`;
+      if (position < 810) {
+        position = position + step;
+      } else {
+        position = step;
+      }
+    }, interval);
+  }
+
   mounted(): void {
     this.initMap();
+    this.alebrijeTalk();
   }
 
   beforeDestroy(): void {
