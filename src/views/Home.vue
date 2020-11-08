@@ -11,6 +11,9 @@
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
+          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
+            Ir a Michoacán
+          </button>
         </div>
       </div>
     </div>
@@ -32,7 +35,69 @@ import MapData from "@/models/MapData";
 am4core.useTheme(am4themes_animated);
 
 export default class Home extends Vue {
-  map: am4maps.MapChart | undefined = undefined;
+  map!: am4maps.MapChart;
+  polygonSeries!: am4maps.MapPolygonSeries;
+  selectedPolygon: am4maps.MapPolygon | undefined = undefined;
+
+  zoomToSelectedPolygon(id: string): void {
+    if (this.selectedPolygon) {
+      this.selectedPolygon.hide();
+    }
+
+    this.selectedPolygon = this.polygonSeries.getPolygonById(id);
+    this.selectedPolygon.hide(0);
+    this.selectedPolygon.opacity = 0;
+    this.selectedPolygon.defaultState.properties.opacity = 1;
+    this.selectedPolygon.toFront();
+
+    this.selectedPolygon.isHover = true;
+
+    let showAnimation = this.selectedPolygon.show(1000);
+    if (!showAnimation) return;
+
+    showAnimation.events.on("animationended", () => {
+      if (!this.selectedPolygon) return;
+
+      this.selectedPolygon.polygon.validate();
+      let w = this.selectedPolygon.polygon.bbox.width;
+      let h = this.selectedPolygon.polygon.bbox.height;
+
+      let x = this.selectedPolygon.polygon.bbox.x + w / 2;
+      let y = this.selectedPolygon.polygon.bbox.y + h / 2;
+
+      w = Math.max(w, h);
+
+      let path = am4core.path.moveTo({ x: x, y: y + w / 3 });
+      path += am4core.path.cubicCurveTo({ x: x, y: y - w / 4 }, { x: x - w / 2 - w / 4, y: y - w / 3 }, { x: x - w / 8, y: y - w / 2 });
+      path += am4core.path.cubicCurveTo({ x: x, y: y + w / 3 }, { x: x + w / 8, y: y - w / 2 }, { x: x + w / 2 + w / 4, y: y - w / 3 });
+
+      let points = am4core.path.pathToPoints(path, 300);
+
+      let middleLatitude = this.map.zoomGeoPoint.latitude + (this.selectedPolygon.latitude - this.map.zoomGeoPoint.latitude) / 2;
+      let middleLongitude = this.map.zoomGeoPoint.longitude + (this.selectedPolygon.longitude - this.map.zoomGeoPoint.longitude) / 2;
+
+      this.map.zoomEasing = am4core.ease.sinOut;
+      let zoomOutAnimation = this.map.zoomToGeoPoint({ latitude: middleLatitude, longitude: middleLongitude }, 2, true);
+
+      zoomOutAnimation.events.on("animationended", () => {
+        if (!this.selectedPolygon) return;
+
+        this.map.zoomEasing = am4core.ease.cubicInOut;
+        this.map.zoomToMapObject(this.selectedPolygon, (400 / Math.max(w, h)) * this.map.scaleRatio, true, 1500);
+        this.selectedPolygon.polygon.points;
+        this.selectedPolygon.polygon.morpher.morphToSingle = true;
+
+        let animation;
+        if (points) {
+          animation = this.selectedPolygon.polygon.morpher.morphToPolygon([[points]]);
+        } else {
+          animation = this.selectedPolygon.polygon.morpher.morphToCircle();
+        }
+
+        animation.stop();
+      });
+    });
+  }
 
   mounted(): void {
     // Create map instance
@@ -73,6 +138,7 @@ export default class Home extends Vue {
     map.zoomControl = new am4maps.ZoomControl();
 
     this.map = map;
+    this.polygonSeries = polygonSeries;
   }
 
   beforeDestroy(): void {
