@@ -20,9 +20,11 @@
       </div>
       <div id="nav-items" class="flex flex-col md:flex-row md:block -mx-2">
         <router-link to="/" id="nav-item" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Inicio</router-link>
-        <router-link to="/game/memory" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Memoria</router-link>
-        <router-link to="/game/puzzle" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Rompecabezas</router-link>
-        <router-link to="/stories" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Cuentos</router-link>
+        <router-link to="/about" id="nav-item" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Acerca de...</router-link>
+        <router-link v-if="isDevelopment" to="/game/hangman" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Ahorcado</router-link>
+        <router-link v-if="isDevelopment" to="/game/memory" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Memoria</router-link>
+        <router-link v-if="isDevelopment" to="/game/puzzle" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Rompecabezas</router-link>
+        <router-link v-if="isDevelopment" to="/stories" class="text-white rounded hover:bg-gray-900 hover:text-gray-100 hover:font-medium py-2 px-2 md:mx-2">Cuentos</router-link>
       </div>
     </div>
   </nav>
@@ -34,7 +36,11 @@
 <script lang="ts">
 import { Vue } from "vue-class-component";
 
-export default class App extends Vue {}
+export default class App extends Vue {
+  get isDevelopment(): boolean {
+    return process.env.NODE_ENV === "development";
+  }
+}
 </script>
 
 <style lang="scss">

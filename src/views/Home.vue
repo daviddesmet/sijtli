@@ -34,7 +34,8 @@
     </div>
     <div class="w-full md:w-7/12 my-auto">
       <div ref="map" style="height: 580px"></div>
-      <!-- <memory-game @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
+      <!-- <memory-game lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
+      <!-- <hangman-game :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" /> -->
     </div>
   </div>
 </template>
@@ -42,6 +43,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import MemoryGame from "@/components/MemoryGame.vue";
+import HangmanGame from "@/components/HangmanGame.vue";
 
 import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
@@ -54,7 +56,8 @@ am4core.useTheme(am4themes_animated);
 
 @Options({
   components: {
-    MemoryGame
+    MemoryGame,
+    HangmanGame
   }
 })
 export default class Home extends Vue {
@@ -62,9 +65,18 @@ export default class Home extends Vue {
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
 
+  hangmanWords = ["Cultura", "Coco", "Altar", "Calavera"];
+
   memoryGameFinished(elapsed: string, turns: number): void {
     // console.log("Memory game finished!!!", elapsed, turns);
-    // TODO: Would be nice to be able to tell that we want to reset the game in case we want to use it again
+    // TODO: Use Vuex in case we want to reset the game and play again later.
+  }
+
+  hangmanGameFinished(word: string, lose: boolean): void {
+    // console.log("Hangman game finished!!!");
+    // console.log("User was guessing word:", word);
+    // console.log("User lose?", lose);
+    // TODO: Use Vuex in case we want to reset the game and play again later.
   }
 
   showSomeLove(show: boolean): void {
