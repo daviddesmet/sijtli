@@ -11,13 +11,24 @@
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
-          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
-            Ir a Michoacán
-          </button>
-          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-OAX')">
-            Ir a Oaxaca
-          </button>
-          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="resetZoomLevel"> Reset </button>
+          <div>
+            <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
+              Ir a Michoacán
+            </button>
+            <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-OAX')">
+              Ir a Oaxaca
+            </button>
+            <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="resetZoomLevel"> Reset </button>
+          </div>
+          <div class="mt-2">
+            <div class="text-gray-800 mt-2">Al hacer zoom a Michoacán u Oaxaca</div>
+            <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="showSomeLove(true)">
+              Convertir a Love
+            </button>
+            <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="showSomeLove(false)">
+              Regresar a Normal
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +53,24 @@ export default class Home extends Vue {
   map!: am4maps.MapChart;
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
+  heartAnimation: am4core.Animation | undefined = undefined;
+
+  showSomeLove(show: boolean): void {
+    if (this.selectedPolygon) {
+      if (show) {
+        let i = 0.0;
+        var intr = window.setInterval(() => {
+          i = parseFloat((i + 0.1).toFixed(1));
+          if (this.selectedPolygon) {
+            this.selectedPolygon.polygon.morpher.morphProgress = i;
+          }
+          if (i == 1) clearInterval(intr);
+        }, 100);
+      } else {
+        this.selectedPolygon.polygon.morpher.morphProgress = 0;
+      }
+    }
+  }
 
   resetZoomLevel(): void {
     if (this.selectedPolygon) {
@@ -134,6 +163,7 @@ export default class Home extends Vue {
     const polygonTemplate = polygonSeries.mapPolygons.template;
     polygonTemplate.tooltipText = "{name}";
     polygonTemplate.fill = am4core.color("#E1AE05"); // 74B266
+
     polygonTemplate.events.on("hit", (ev) => {
       ev.target.series.chart.zoomToMapObject(ev.target);
 
