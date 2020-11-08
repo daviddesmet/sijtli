@@ -2,17 +2,17 @@
   <!-- <div class="container mx-auto flex flex-wrap items-start self-start mt-24"> -->
   <div class="container mx-auto flex flex-wrap items-start">
     <div class="w-full md:w-5/12 text-center lg:text-left px-8 md:px-12">
-      <div class="p-12 rounded-lg shadow-md" style="background-color: rgb(160, 159, 208)">
+      <div class="p-12 rounded-lg shadow-md" style="background-color: rgb(160, 159, 208); height: 580px">
         <img v-show="!talking" alt="logo" class="mx-auto" src="/img/alebrije-static.png" style="height: 150px; width: 135px" />
-        <p v-show="talking" ref="alebrijeTalking" class="mx-auto" style="background: url('/img/alebrije-talk-sprite.png') 0 0; height: 150px; width: 135px" />
+        <div v-show="talking" ref="alebrijeTalking" class="mx-auto" style="background: url('/img/alebrije-talk-sprite.png') 0 0; height: 150px; width: 135px" />
         <div class="text-center text-yellow-500">
-          <h2 class="text-lg">Algo....</h2>
-          <div class="text-gray-800 mt-2">Contenido...</div>
-          <div class="text-gray-800 mt-2">Contenido...</div>
-          <div class="text-gray-800 mt-2">Contenido...</div>
-          <div class="text-gray-800 mt-2">Contenido...</div>
-          <div class="text-gray-800 mt-2">Contenido...</div>
-          <div>
+          <button
+            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded mt-4"
+            @click.prevent="startJourney"
+          >
+            {{ beginTalkText }}
+          </button>
+          <!-- <div>
             <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
               Ir a Michoacán
             </button>
@@ -29,11 +29,27 @@
             <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="showSomeLove(false)">
               Regresar a Normal
             </button>
-          </div>
+          </div> -->
         </div>
+        <!-- <div class="mt-4 text-center text-yellow-500">
+          <h2 class="text-lg">{{ speechTitle }}</h2>
+          <div class="text-gray-800 mt-2">{{ speechContent }}</div>
+        </div> -->
       </div>
     </div>
-    <div class="w-full md:w-7/12 my-auto">
+    <div v-show="step === 0" class="bg-indigo-800 rounded-lg shadow-md w-full md:w-7/12 flex content-center" style="height: 580px">
+      <div class="text-center text-yellow-500 my-auto mx-auto">
+        <img src="/img/alebrije.png" alt="alebrije" />
+        <h2 class="text-2xl mt-4">¿Sabes que es un alebrije?</h2>
+      </div>
+    </div>
+    <div v-show="step === 1" class="bg-indigo-800 rounded-lg shadow-md w-full md:w-7/12 flex content-center" style="height: 580px">
+      <div class="text-center text-yellow-500 my-auto mx-auto">
+        <img src="/img/day-of-death.png" alt="day-of-death" style="max-height: 350px" />
+        <h2 class="text-2xl mt-4">¿Sabes que es el día de muertos?</h2>
+      </div>
+    </div>
+    <div v-show="step > 1" class="w-full md:w-7/12 my-auto">
       <div ref="map" style="height: 580px"></div>
       <!-- <memory-game lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
       <!-- <hangman-game :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" /> -->
@@ -45,6 +61,10 @@
 import { Options, Vue } from "vue-class-component";
 import MemoryGame from "@/components/MemoryGame.vue";
 import HangmanGame from "@/components/HangmanGame.vue";
+
+import * as sdk from "microsoft-cognitiveservices-speech-sdk";
+import { SPEECH_SDK_KEY, SPEECH_SDK_REGION } from "@/constants/config";
+import { SPEECH_ES } from "@/data/speech.data";
 
 import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
@@ -66,8 +86,50 @@ export default class Home extends Vue {
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
 
+  speechConfig!: sdk.SpeechConfig;
+  synthesizer!: sdk.SpeechSynthesizer;
+  player!: sdk.SpeakerAudioDestination;
+
+  step = 0;
+  speechSpanish = SPEECH_ES;
+  speechTitle = "";
+  speechContent = "";
+
+  beginTalkText = "Comenzar";
+  beginTalkEnabled = false;
   talking = false;
+  talkAnimation: number | undefined = undefined;
+
   hangmanWords = ["Cultura", "Coco", "Altar", "Calavera"];
+
+  textToPitch(text: string, lang: string, voice: string): string {
+    return `<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="${lang}">
+              <voice name="${lang}-${voice}">
+                ${text}
+              </voice>
+            </speak>`;
+  }
+
+  play(text: string, lang = "en-US", voice = "JessaRUS"): void {
+    this.synthesizer.synthesisStarted = (s, e) => {
+      this.beginTalkEnabled = false;
+    };
+    this.synthesizer.speakSsmlAsync(
+      this.textToPitch(text, lang, voice),
+      (result) => {
+        if (result.reason === sdk.ResultReason.Canceled) {
+          console.warn("Synthesis failed. Error detail: " + result.errorDetails);
+        }
+        // this.talking = false;
+        this.synthesizer.close();
+      },
+      (error) => {
+        console.error(error);
+        this.talking = false;
+        this.synthesizer.close();
+      }
+    );
+  }
 
   memoryGameFinished(elapsed: string, turns: number): void {
     // console.log("Memory game finished!!!", elapsed, turns);
@@ -220,25 +282,86 @@ export default class Home extends Vue {
     }
   }
 
-  alebrijeTalk(): void {
+  initSpeechEngine(): void {
+    this.speechConfig = sdk.SpeechConfig.fromSubscription(SPEECH_SDK_KEY, SPEECH_SDK_REGION);
+    this.player = new sdk.SpeakerAudioDestination();
+    this.player.onAudioEnd = () => {
+      this.endStep();
+    };
+
+    const audioConfig = sdk.AudioConfig.fromSpeakerOutput(this.player);
+    this.synthesizer = new sdk.SpeechSynthesizer(this.speechConfig, audioConfig);
+  }
+
+  alebrijeTalkAnimation(): void {
     const step = 135;
     let position = step;
     let interval = 150; //100 ms of interval for the setInterval()
 
-    const tID = window.setInterval(() => {
+    this.talkAnimation = window.setInterval(() => {
       const alebrijeTalking = this.$refs.alebrijeTalking as HTMLDivElement;
-      alebrijeTalking.style.backgroundPosition = `-${position}px 0px`;
-      if (position < 810) {
-        position = position + step;
-      } else {
-        position = step;
+      if (this.talking && alebrijeTalking) {
+        alebrijeTalking.style.backgroundPosition = `-${position}px 0px`;
+        if (position < 810) {
+          position = position + step;
+        } else {
+          position = step;
+        }
       }
     }, interval);
   }
 
+  alebrijeStopTalk(): void {
+    if (this.talkAnimation) {
+      clearInterval(this.talkAnimation);
+    }
+  }
+
+  endStep(): void {
+    this.talking = false;
+    this.beginTalkEnabled = true;
+
+    switch (this.step) {
+      case 0:
+        this.beginTalkText = "Continuar...";
+        this.step = 1;
+        break;
+      case 1:
+        this.beginTalkText = "Oaxaca...?";
+        this.step = 2;
+        break;
+      case 2:
+        break;
+      default:
+        break;
+    }
+  }
+
+  startJourney(): void {
+    if (this.talking) return;
+
+    this.talking = true;
+    switch (this.step) {
+      case 0:
+        // Alebrije
+        this.speechTitle = "¿Sabes que es un alebrije?";
+        this.initSpeechEngine();
+        this.play(this.speechSpanish[0], "es-MX", "DaliaNeural");
+        break;
+      case 1:
+        // Day of Death
+        this.speechTitle = "¿Sabes que es el día de muertos?";
+        this.initSpeechEngine();
+        this.play(this.speechSpanish[1], "es-MX", "DaliaNeural");
+        break;
+      default:
+        break;
+    }
+  }
+
   mounted(): void {
     this.initMap();
-    this.alebrijeTalk();
+    this.alebrijeTalkAnimation();
   }
 
   beforeDestroy(): void {
