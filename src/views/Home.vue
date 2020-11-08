@@ -44,6 +44,10 @@ export default class Home extends Vue {
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
 
   resetZoomLevel(): void {
+    if (this.selectedPolygon) {
+      this.selectedPolygon.isActive = false;
+    }
+
     this.map.goHome();
   }
 
