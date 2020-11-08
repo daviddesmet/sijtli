@@ -66,6 +66,7 @@
     <div class="w-full md:w-7/12 my-auto">
       <img v-show="step === 0" class="mx-auto absolute right-0 mr-6" src="/img/alebrije.png" alt="alebrije" style="max-height: 220px" />
       <img v-show="step === 1" class="mx-auto absolute right-0 mr-10" src="/img/day-of-death.png" alt="day-of-death" style="max-height: 220px" />
+      <img v-show="step === 7" class="mx-auto absolute right-0 mr-10" src="/img/cempasuchil-flower.png" alt="cempasuchil-flower" style="max-height: 220px" />
       <div v-show="step <= 2 || step === 4 || step === 6 || step === 7 || step === 8" ref="map" style="height: 580px"></div>
       <memory-game v-show="step === 3" :lang="lang" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" />
       <hangman-game v-if="step === 5" :words="hangmanWords" :lang="lang" @finished="hangmanGameFinished" :allow-play-again="false" />
@@ -368,7 +369,7 @@ export default class Home extends Vue {
     const activeState = polygonTemplate.states.create("active");
     activeState.properties.fill = am4core.color("#F28800"); // map.colors.getIndex(4);
 
-    map.zoomControl = new am4maps.ZoomControl();
+    // map.zoomControl = new am4maps.ZoomControl();
 
     this.map = map;
     this.polygonSeries = polygonSeries;
