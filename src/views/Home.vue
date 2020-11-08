@@ -11,7 +11,7 @@
           <button class="mt-4 mr-4" :class="{ 'text-indigo-800': lang === 'ES' }" @click.prevent="switchLanguage('EN')">EN</button>
           <button class="mt-4" :class="{ 'text-indigo-800': lang === 'EN' }" @click.prevent="switchLanguage('ES')">ES</button>
           <button
-            v-if="!noMore"
+            v-if="!noMore && !onGame"
             class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded mt-4"
             @click.prevent="startJourney"
           >
@@ -114,6 +114,7 @@ export default class Home extends Vue {
   speechEnglish = SPEECH_EN;
   speechTitle = "";
   speechContent = "";
+  onGame = false;
   noMore = false;
 
   beginTalkText = "";
@@ -436,6 +437,7 @@ export default class Home extends Vue {
         this.step = 2;
         break;
       case 2:
+        this.onGame = true;
         this.beginTalkText = this.textLanguage(12);
         this.showSomeLove(true);
         window.setTimeout(() => {
@@ -451,12 +453,14 @@ export default class Home extends Vue {
         }, 2500);
         break;
       case 3:
+        this.onGame = false;
         this.beginTalkText = "Michoacán";
         window.setTimeout(() => {
           this.step = 4;
         }, 2500);
         break;
       case 4:
+        this.onGame = true;
         this.beginTalkText = this.textLanguage(12);
         this.showSomeLove(true);
         window.setTimeout(() => {
@@ -472,6 +476,7 @@ export default class Home extends Vue {
         }, 2500);
         break;
       case 5:
+        this.onGame = false;
         this.beginTalkText = "Guanajuato";
         window.setTimeout(() => {
           this.step = 6;
