@@ -2,7 +2,8 @@
 
 ![Azure Static Web Apps CI/CD](https://github.com/daviddesmet/sijtli/workflows/Azure%20Static%20Web%20Apps%20CI/CD/badge.svg)
 
-[www.sijtli.me](https://www.sijtli.me) **TODO:** Add a description
+The most awesome project using the amazing Azure technologies!
+The project is located at [www.sijtli.me](https://www.sijtli.me)
 
 ## Azure Technologies
 
