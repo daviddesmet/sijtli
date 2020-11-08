@@ -53,7 +53,6 @@ export default class Home extends Vue {
   map!: am4maps.MapChart;
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
-  heartAnimation: am4core.Animation | undefined = undefined;
 
   showSomeLove(show: boolean): void {
     if (this.selectedPolygon) {
