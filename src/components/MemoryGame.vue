@@ -24,8 +24,8 @@
     <div class="splash" v-if="finished">
       <div class="overlay"></div>
       <div class="content">
-        <div class="title">Tiempo: {{ elapsedTime }}</div>
-        <button @click.prevent="resetGame">Jugar de nuevo!</button>
+        <div class="title">Tiempo: {{ elapsedTime }} | Intentos: {{ turns }}</div>
+        <button @click.prevent="resetGame">{{ playAgainMessage }}</button>
       </div>
     </div>
   </div>
@@ -51,6 +51,11 @@ class Props {
   allowPlayAgain = prop<boolean>({ default: true });
   heightSize = prop<number>({ default: 260 });
   widthSize = prop<number>({ default: 180 });
+  lang = prop({
+    type: String,
+    default: "EN",
+    validator: (value: string) => ["EN", "ES"].indexOf(value) !== -1
+  });
 }
 
 @Options({
@@ -83,6 +88,15 @@ export default class MemoryGame extends Vue.props(Props) {
     { name: "calaca", img: "/img/cards/calaca.jpg", flipped: false, matched: false },
     { name: "skeleton-flat-woman", img: "/img/cards/skeleton-flat-woman.jpg", flipped: false, matched: false }
   ];
+
+  get playAgainMessage(): string {
+    switch (this.lang) {
+      case "ES":
+        return "Jugar de nuevo!";
+      default:
+        return "Play Again!";
+    }
+  }
 
   get flippedCards(): CardType[] {
     return filter(this.deck, (card) => {
