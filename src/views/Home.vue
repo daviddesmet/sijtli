@@ -33,13 +33,14 @@
         </div>
         <div class="mt-4 text-center text-yellow-500">
           <!-- <h2 class="text-lg">{{ speechTitle }}</h2> -->
-          <div class="text-gray-800 text-lg mt-16">
-            Hoy vas a estar acompañado de Sijtli, ella te acompañará a dar un recorrido por algunos de los estados de la república, podrás encontrar juegos y leyendas, comienza tu recorrido
+          <div v-show="step !== 3" class="text-gray-800 text-lg mt-16">
+            Hoy vas a estar acompañado de Sijtli, ella te acompañará a dar un recorrido por algunos de los estados de la república, podrás encontrar juegos y leyendas. ¡Comienza tu recorrido!
           </div>
+          <div v-show="step === 3" class="text-gray-800 text-lg mt-16">Hagamos algo divertido, pon a prueba tu memoria jugando el memorama. ¡Comencemos!</div>
         </div>
       </div>
     </div>
-    <div v-show="step === 0" class="bg-indigo-800 rounded-lg shadow-md w-full md:w-7/12 flex content-center" style="height: 580px">
+    <!-- <div v-show="step === 0" class="bg-indigo-800 rounded-lg shadow-md w-full md:w-7/12 flex content-center" style="height: 580px">
       <div class="text-center text-yellow-500 my-auto mx-auto">
         <img src="/img/alebrije.png" alt="alebrije" />
         <h2 class="text-2xl mt-4">¿Sabes que es un alebrije?</h2>
@@ -50,10 +51,12 @@
         <img src="/img/day-of-death.png" alt="day-of-death" style="max-height: 350px" />
         <h2 class="text-2xl mt-4">¿Sabes que es el día de muertos?</h2>
       </div>
-    </div>
-    <div v-show="step > 1" class="w-full md:w-7/12 my-auto">
-      <div v-show="step === 2" ref="map" style="height: 580px"></div>
-      <!-- <memory-game lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
+    </div> -->
+    <div class="w-full md:w-7/12 my-auto">
+      <img v-show="step === 0" class="mx-auto absolute right-0 mr-6" src="/img/alebrije.png" alt="alebrije" style="max-height: 220px" />
+      <img v-show="step === 1" class="mx-auto absolute right-0 mr-10" src="/img/day-of-death.png" alt="day-of-death" style="max-height: 220px" />
+      <div v-show="step <= 2 || step === 4" ref="map" style="height: 580px"></div>
+      <memory-game v-show="step === 3" lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" />
       <!-- <hangman-game :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" /> -->
     </div>
   </div>
@@ -92,7 +95,7 @@ export default class Home extends Vue {
   synthesizer!: sdk.SpeechSynthesizer;
   player!: sdk.SpeakerAudioDestination;
 
-  step = 0;
+  step = -1;
   speechSpanish = SPEECH_ES;
   speechTitle = "";
   speechContent = "";
@@ -114,6 +117,7 @@ export default class Home extends Vue {
 
   play(text: string, lang = "en-US", voice = "JessaRUS"): void {
     this.synthesizer.synthesisStarted = (s, e) => {
+      this.talking = true;
       this.beginTalkEnabled = false;
     };
     this.synthesizer.speakSsmlAsync(
@@ -136,6 +140,8 @@ export default class Home extends Vue {
   memoryGameFinished(elapsed: string, turns: number): void {
     // console.log("Memory game finished!!!", elapsed, turns);
     // TODO: Use Vuex in case we want to reset the game and play again later.
+    this.initSpeechEngine();
+    this.play(`Felicidades, resolviste el memorama en tan solo ${turns} turnos!`, "es-MX", "DaliaNeural");
   }
 
   hangmanGameFinished(word: string, lose: boolean): void {
@@ -329,12 +335,23 @@ export default class Home extends Vue {
         this.step = 1;
         break;
       case 1:
-        this.beginTalkText = "Oaxaca";
+        this.beginTalkText = "Ohhh, Oaxaca";
         this.step = 2;
         break;
       case 2:
+        // this.beginTalkText = "¡Juguemos!";
         this.showSomeLove(true);
-        // this.step = 3;
+        window.setTimeout(() => {
+          this.showSomeLove(false);
+          this.resetZoomLevel();
+          this.step = 3;
+        }, 2500);
+        break;
+      case 3:
+        this.beginTalkText = "Sigamos el recorrido";
+        window.setTimeout(() => {
+          this.step = 4;
+        }, 2500);
         break;
       default:
         break;
@@ -343,6 +360,10 @@ export default class Home extends Vue {
 
   startJourney(): void {
     if (this.talking) return;
+
+    if (this.step == -1) {
+      this.step = 0;
+    }
 
     switch (this.step) {
       case 0:
@@ -365,10 +386,9 @@ export default class Home extends Vue {
     }
 
     window.setTimeout(() => {
-      this.talking = true;
       this.initSpeechEngine();
       this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
-    }, 2000);
+    }, 2500);
   }
 
   mounted(): void {
