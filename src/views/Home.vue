@@ -7,6 +7,7 @@
         <div v-show="talking" ref="alebrijeTalking" class="mx-auto" style="background: url('/img/alebrije-talk-sprite.png') 0 0; height: 150px; width: 135px" />
         <div class="text-center text-yellow-500">
           <button
+            v-if="!noMore"
             class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded mt-4"
             @click.prevent="startJourney"
           >
@@ -43,6 +44,8 @@
           <div v-show="step === 4" class="text-gray-800 text-lg mt-16">Michoacán y sus pueblos mágicos como Pátzcuaro, Janitzio, Tzintzuntzan.</div>
           <div v-show="step === 5" class="text-gray-800 text-lg mt-16">¡Vaya! Hemos aprendido mucho en este recorrido. Alebrijes, catrinas, ofrendas...</div>
           <div v-show="step === 6" class="text-gray-800 text-lg mt-16">¡Guanajuato! Es uno de los estados del país donde se celebra a lo grande.</div>
+          <div v-show="step === 7" class="text-gray-800 text-lg mt-16">Y para concluir con esta aventura, les platicare de la flor de cempasúchil.</div>
+          <div v-show="step === 8" class="text-gray-800 text-lg mt-16">¡Gracias y hasta pronto!</div>
         </div>
       </div>
     </div>
@@ -61,7 +64,7 @@
     <div class="w-full md:w-7/12 my-auto">
       <img v-show="step === 0" class="mx-auto absolute right-0 mr-6" src="/img/alebrije.png" alt="alebrije" style="max-height: 220px" />
       <img v-show="step === 1" class="mx-auto absolute right-0 mr-10" src="/img/day-of-death.png" alt="day-of-death" style="max-height: 220px" />
-      <div v-show="step <= 2 || step === 4 || step === 6" ref="map" style="height: 580px"></div>
+      <div v-show="step <= 2 || step === 4 || step === 6 || step === 7 || step === 8" ref="map" style="height: 580px"></div>
       <memory-game v-show="step === 3" lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" />
       <hangman-game v-if="step === 5" :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" />
     </div>
@@ -101,10 +104,11 @@ export default class Home extends Vue {
   synthesizer!: sdk.SpeechSynthesizer;
   player!: sdk.SpeakerAudioDestination;
 
-  step = 4; // -1
+  step = -1; // -1
   speechSpanish = SPEECH_ES;
   speechTitle = "";
   speechContent = "";
+  noMore = false;
 
   beginTalkText = "Comenzar";
   beginTalkEnabled = false;
@@ -394,6 +398,16 @@ export default class Home extends Vue {
           this.step = 6;
         }, 2500);
         break;
+      case 6:
+        this.beginTalkText = "Cempasúchil";
+        window.setTimeout(() => {
+          this.resetZoomLevel();
+          this.step = 7;
+        }, 2500);
+        break;
+      case 7:
+        this.step = 8;
+        break;
       default:
         break;
     }
@@ -426,9 +440,13 @@ export default class Home extends Vue {
         this.speechTitle = "Lo representativo del estado de Michoacán";
         break;
       case 6:
-        // Michoacan
+        // Guanajuato
         this.zoomToSelectedPolygon("MX-GUA");
         this.speechTitle = "Lo representativo del estado de Guanajuato";
+        break;
+      case 7:
+        this.speechTitle = "La leyenda de la flor de Cempasúchil";
+        this.noMore = true;
         break;
       default:
         break;
