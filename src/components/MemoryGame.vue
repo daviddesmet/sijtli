@@ -2,10 +2,10 @@
   <div>
     <div class="header">
       <div>
-        <span class="label">Tiempo:</span> <span class="value">{{ elapsedTime }} </span>
+        <span class="label">{{ timeLabel }}:</span> <span class="value">{{ elapsedTime }} </span>
       </div>
       <div>
-        <span class="label">Turnos:</span> <span class="value">{{ turns }} </span>
+        <span class="label">{{ turnsLabel }}:</span> <span class="value">{{ turns }} </span>
       </div>
     </div>
     <div class="cards flex flex-wrap justify-center mx-auto max-w-5xl">
@@ -24,7 +24,7 @@
     <div class="splash" v-if="finished">
       <div class="overlay"></div>
       <div class="content">
-        <div class="title">Tiempo: {{ elapsedTime }} | Intentos: {{ turns }}</div>
+        <div class="title">{{ timeLabel }}: {{ elapsedTime }} | {{ turnsLabel }}: {{ turns }}</div>
         <button @click.prevent="resetGame">{{ playAgainMessage }}</button>
       </div>
     </div>
@@ -95,6 +95,24 @@ export default class MemoryGame extends Vue.props(Props) {
         return "Jugar de nuevo!";
       default:
         return "Play Again!";
+    }
+  }
+
+  get timeLabel(): string {
+    switch (this.lang) {
+      case "ES":
+        return "Tiempo";
+      default:
+        return "Time";
+    }
+  }
+
+  get turnsLabel(): string {
+    switch (this.lang) {
+      case "ES":
+        return "Intentos";
+      default:
+        return "Turns";
     }
   }
 

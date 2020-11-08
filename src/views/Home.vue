@@ -67,8 +67,8 @@
       <img v-show="step === 0" class="mx-auto absolute right-0 mr-6" src="/img/alebrije.png" alt="alebrije" style="max-height: 220px" />
       <img v-show="step === 1" class="mx-auto absolute right-0 mr-10" src="/img/day-of-death.png" alt="day-of-death" style="max-height: 220px" />
       <div v-show="step <= 2 || step === 4 || step === 6 || step === 7 || step === 8" ref="map" style="height: 580px"></div>
-      <memory-game v-show="step === 3" lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" />
-      <hangman-game v-if="step === 5" :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" />
+      <memory-game v-show="step === 3" :lang="lang" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" />
+      <hangman-game v-if="step === 5" :words="hangmanWords" :lang="lang" @finished="hangmanGameFinished" :allow-play-again="false" />
     </div>
   </div>
 </template>
@@ -466,7 +466,7 @@ export default class Home extends Vue {
           if (this.lang == "ES") {
             this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
           } else {
-            this.play(this.speechSpanish[this.step], "en-US", "AriaNeural");
+            this.play(this.speechEnglish[this.step], "en-US", "AriaNeural");
           }
         }, 2500);
         break;
