@@ -34,12 +34,15 @@
     </div>
     <div class="w-full md:w-7/12 my-auto">
       <div ref="map" style="height: 580px"></div>
+      <!-- <memory-game @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
+import MemoryGame from "@/components/MemoryGame.vue";
+
 import * as am4core from "@amcharts/amcharts4/core";
 // import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -49,10 +52,20 @@ import MapData from "@/models/MapData";
 
 am4core.useTheme(am4themes_animated);
 
+@Options({
+  components: {
+    MemoryGame
+  }
+})
 export default class Home extends Vue {
   map!: am4maps.MapChart;
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
+
+  memoryGameFinished(elapsed: string, turns: number): void {
+    // console.log("Memory game finished!!!", elapsed, turns);
+    // TODO: Would be nice to be able to tell that we want to reset the game in case we want to use it again
+  }
 
   showSomeLove(show: boolean): void {
     if (this.selectedPolygon) {
@@ -138,7 +151,7 @@ export default class Home extends Vue {
     });
   }
 
-  mounted(): void {
+  initMap(): void {
     // Create map instance
     const map = am4core.create(this.$refs.map as HTMLDivElement, am4maps.MapChart);
 
@@ -185,10 +198,20 @@ export default class Home extends Vue {
     this.polygonSeries = polygonSeries;
   }
 
-  beforeDestroy(): void {
+  removeMap(): void {
     if (this.map) {
+      this.selectedPolygon?.dispose();
+      this.polygonSeries?.dispose();
       this.map.dispose();
     }
+  }
+
+  mounted(): void {
+    this.initMap();
+  }
+
+  beforeDestroy(): void {
+    this.removeMap();
   }
 }
 </script>

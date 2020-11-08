@@ -9,7 +9,14 @@
       </div>
     </div>
     <div class="cards flex flex-wrap justify-center mx-auto max-w-5xl">
-      <div class="card cursor-pointer" v-for="(card, index) in deck" :key="index" :class="{ flipped: card.flipped, matched: card.matched }" @click="flipCard(card)">
+      <div
+        class="card cursor-pointer"
+        v-for="(card, index) in deck"
+        :key="index"
+        :class="{ flipped: card.flipped, matched: card.matched }"
+        @click="flipCard(card)"
+        :style="{ height: heightSize + 'px', width: widthSize + 'px' }"
+      >
         <div class="back bg-white border border-gray-400 rounded-lg shadow"></div>
         <div class="front bg-white border border-gray-400 rounded-lg shadow" :style="{ backgroundImage: 'url(' + card.img + ')' }"></div>
       </div>
@@ -25,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { prop, Options, Vue } from "vue-class-component";
 import cloneDeep from "lodash-es/cloneDeep";
 // import each from "lodash-es/each";
 import filter from "lodash-es/filter";
@@ -40,12 +47,18 @@ interface CardType {
   matched: boolean;
 }
 
+class Props {
+  allowPlayAgain = prop<boolean>({ default: true });
+  heightSize = prop<number>({ default: 260 });
+  widthSize = prop<number>({ default: 180 });
+}
+
 @Options({
   components: {
     Card
   }
 })
-export default class MemoryGame extends Vue {
+export default class MemoryGame extends Vue.props(Props) {
   started = false;
   finished = false;
   startTime = 0;
@@ -126,7 +139,12 @@ export default class MemoryGame extends Vue {
   endGame(): void {
     this.started = false;
     clearInterval(this.timer);
-    this.finished = true;
+
+    if (this.allowPlayAgain) {
+      this.finished = true;
+    }
+
+    this.$emit("finished", this.elapsedTime, this.turns);
   }
 
   shuffleDeck(): CardType[] {
@@ -217,14 +235,14 @@ export default class MemoryGame extends Vue {
 
 .cards .card {
   display: inline-block;
-  height: 260px;
+  // height: 260px;
   margin: 1em 2em;
   position: relative;
   transition: opacity 0.5s;
   transition: opacity 0.5s;
   transition: opacity 0.5s;
   transition: opacity 0.5s;
-  width: 180px;
+  // width: 180px;
 }
 
 .cards .card .front,
