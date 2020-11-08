@@ -202,7 +202,7 @@ export default class MemoryGame extends Vue.props(Props) {
       this.turns++;
 
       if (this.flippedCardsMatch) {
-        setTimeout(() => {
+        window.setTimeout(() => {
           this.matchFlips();
           this.clearFlips();
 
@@ -211,7 +211,7 @@ export default class MemoryGame extends Vue.props(Props) {
           }
         }, 400);
       } else {
-        setTimeout(() => {
+        window.setTimeout(() => {
           this.clearFlips();
         }, 800);
       }

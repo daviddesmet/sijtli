@@ -31,10 +31,12 @@
             </button>
           </div> -->
         </div>
-        <!-- <div class="mt-4 text-center text-yellow-500">
-          <h2 class="text-lg">{{ speechTitle }}</h2>
-          <div class="text-gray-800 mt-2">{{ speechContent }}</div>
-        </div> -->
+        <div class="mt-4 text-center text-yellow-500">
+          <!-- <h2 class="text-lg">{{ speechTitle }}</h2> -->
+          <div class="text-gray-800 text-lg mt-16">
+            Hoy vas a estar acompañado de Sijtli, ella te acompañará a dar un recorrido por algunos de los estados de la república, podrás encontrar juegos y leyendas, comienza tu recorrido
+          </div>
+        </div>
       </div>
     </div>
     <div v-show="step === 0" class="bg-indigo-800 rounded-lg shadow-md w-full md:w-7/12 flex content-center" style="height: 580px">
@@ -50,7 +52,7 @@
       </div>
     </div>
     <div v-show="step > 1" class="w-full md:w-7/12 my-auto">
-      <div ref="map" style="height: 580px"></div>
+      <div v-show="step === 2" ref="map" style="height: 580px"></div>
       <!-- <memory-game lang="ES" @finished="memoryGameFinished" :allow-play-again="false" :height-size="130" :width-size="90" /> -->
       <!-- <hangman-game :words="hangmanWords" lang="ES" @finished="hangmanGameFinished" :allow-play-again="false" /> -->
     </div>
@@ -327,10 +329,12 @@ export default class Home extends Vue {
         this.step = 1;
         break;
       case 1:
-        this.beginTalkText = "Oaxaca...?";
+        this.beginTalkText = "Oaxaca";
         this.step = 2;
         break;
       case 2:
+        this.showSomeLove(true);
+        // this.step = 3;
         break;
       default:
         break;
@@ -340,23 +344,31 @@ export default class Home extends Vue {
   startJourney(): void {
     if (this.talking) return;
 
-    this.talking = true;
     switch (this.step) {
       case 0:
         // Alebrije
         this.speechTitle = "¿Sabes que es un alebrije?";
-        this.initSpeechEngine();
-        this.play(this.speechSpanish[0], "es-MX", "DaliaNeural");
         break;
       case 1:
         // Day of Death
         this.speechTitle = "¿Sabes que es el día de muertos?";
-        this.initSpeechEngine();
-        this.play(this.speechSpanish[1], "es-MX", "DaliaNeural");
+        break;
+      case 2:
+        // Oaxaca
+        this.zoomToSelectedPolygon("MX-OAX");
+        this.speechTitle = "Lo representativo del estado de Oaxaca";
+        break;
+      case 3:
         break;
       default:
         break;
     }
+
+    window.setTimeout(() => {
+      this.talking = true;
+      this.initSpeechEngine();
+      this.play(this.speechSpanish[this.step], "es-MX", "DaliaNeural");
+    }, 2000);
   }
 
   mounted(): void {
