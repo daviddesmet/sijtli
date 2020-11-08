@@ -11,9 +11,13 @@
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
           <div class="text-gray-800 mt-2">Contenido...</div>
-          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
+          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-MIC')">
             Ir a Michoacán
           </button>
+          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700 mr-2" @click.prevent="zoomToSelectedPolygon('MX-OAX')">
+            Ir a Oaxaca
+          </button>
+          <button class="border border-white rounded p-2 hover:bg-gray-900 hover:border-pink-500 transition ease-in-out duration-700" @click.prevent="resetZoomLevel"> Reset </button>
         </div>
       </div>
     </div>
@@ -39,18 +43,19 @@ export default class Home extends Vue {
   polygonSeries!: am4maps.MapPolygonSeries;
   selectedPolygon: am4maps.MapPolygon | undefined = undefined;
 
+  resetZoomLevel(): void {
+    this.map.goHome();
+  }
+
   zoomToSelectedPolygon(id: string): void {
     if (this.selectedPolygon) {
-      this.selectedPolygon.hide();
+      this.selectedPolygon.isActive = false;
     }
 
     this.selectedPolygon = this.polygonSeries.getPolygonById(id);
-    this.selectedPolygon.hide(0);
     this.selectedPolygon.opacity = 0;
     this.selectedPolygon.defaultState.properties.opacity = 1;
     this.selectedPolygon.toFront();
-
-    this.selectedPolygon.isHover = true;
 
     let showAnimation = this.selectedPolygon.show(1000);
     if (!showAnimation) return;
@@ -96,6 +101,8 @@ export default class Home extends Vue {
 
         animation.stop();
       });
+
+      this.selectedPolygon.isActive = true;
     });
   }
 
@@ -128,12 +135,16 @@ export default class Home extends Vue {
 
       // get object info
       const data = ev.target.dataItem.dataContext as MapData;
-      // console.log(data.name);
+      // console.log(data.id, data.name);
     });
 
     // Create hover state and set alternative fill color
     const hs = polygonTemplate.states.create("hover");
     hs.properties.fill = am4core.color("#F28800"); // 367B25
+
+    // Create active state
+    const activeState = polygonTemplate.states.create("active");
+    activeState.properties.fill = am4core.color("#F28800"); // map.colors.getIndex(4);
 
     map.zoomControl = new am4maps.ZoomControl();
 
