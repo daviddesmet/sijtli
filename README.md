@@ -9,9 +9,12 @@ The project is located at [www.sijtli.me](https://www.sijtli.me)
 
 - Azure Static Web Apps
 - Azure Cognitive Services
-- ...
+
+Project is powered by Vue.js =]
 
 ## Project setup
+
+Want to try out the project on your local environment? Just follow the instructions below!
 
 ```
 yarn install
